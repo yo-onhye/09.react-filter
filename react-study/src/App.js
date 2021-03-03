@@ -9,7 +9,7 @@ const App = () => {
   const [title, setTitle] = useState('');
   const [items, setItems] = useState([]);
   const [filterItems, setFilterItems] = useState([]);
-  const [isTitleCheck, setTitleCheck] = useState(false);
+  const [isTitleCheck, setIsTitleCheck] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(10);
@@ -20,31 +20,31 @@ const App = () => {
     if (e.target.value === 'true') {
       const newFilterItems = items.filter(item => item.completed);
       setFilterItems(newFilterItems);
-      setTitleCheck(true);
+      handleTitleCheck(true);
     } else if (e.target.value === 'false') {
       const newFilterItems = items.filter(item => !item.completed);
       setFilterItems(newFilterItems);
-      setTitleCheck(false);
+      handleTitleCheck(false);
     } else {
-      setFilterItems();
-    };
+      setFilterItems(items);
+    }
   };
 
   const handleFilterTitle = e => {
     if (e.target.value === '') {
-      setFilterItems();
+      setFilterItems(items);
     } else {
-      const newData = items.filter(item => item.title.match(title));
+      const newData = filterItems.filter(item => item.title.match(title));
       setFilterItems(newData);
     };
   };
 
   const handleAllCheck = e => {
-    const { checked } = e.target;
+    handleTitleCheck(e.target.checked);
     const allCheckItems = items.map(item => {
       return {
         ...item,
-        completed: checked
+        completed: e.target.checked
       };
     });
     setFilterItems(allCheckItems);
@@ -59,6 +59,11 @@ const App = () => {
     });
 
     setItems(newItems);
+  }
+
+  const handleTitleCheck = isChecked => {
+    setIsTitleCheck(!isChecked);
+    console.log(isChecked);
   }
 
   useEffect(() => {
@@ -79,6 +84,9 @@ const App = () => {
     }
   }, []);
 
+  const currentPosts = filterItems.slice(indexOfFirst, indexOfLast);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <main className='container'>
       <section className='todoFilter'>
@@ -96,7 +104,7 @@ const App = () => {
               value={title}
               name='keywordText' 
               onChange={e => setTitle(e.target.value)}
-              onKeyUp={handleFilterTitle} 
+              onKeyUp={handleFilterTitle}
               title='검색어 입력' 
               placeholder='검색어를 입력하세요.'
             />
@@ -104,16 +112,15 @@ const App = () => {
         </form>
       </section>
       <TodoList 
-        items={filterItems.slice(indexOfFirst, indexOfLast) || items}
+        items={currentPosts || items}
         isLoading={isLoading}
-        isTitleCheck={isTitleCheck}
         onAllCheck={handleAllCheck}
         onSingleCheck={handleSingleCheck}
       />
       <Pagination
         postsPerPage={postsPerPage}
         totalPosts={filterItems.length}
-        paginate={setCurrentPage}
+        paginate={paginate}
         currentPage={currentPage}
       />
     </main>

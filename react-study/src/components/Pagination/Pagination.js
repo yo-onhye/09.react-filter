@@ -16,7 +16,11 @@ const Pagination = ({
       <ul className='page-list'>
         {pageNumbers.map(number => (
           <li key={number} className='page-item'>
-            <button type='button' onClick={() => paginate(number)} className={`page-link ${currentPage===number && "active"}`}>
+            <button
+              type='button'
+              onClick={() => paginate(number)}
+              className={`page-link ${currentPage===number && "active"}`}
+            >
               {number}
             </button>
           </li>

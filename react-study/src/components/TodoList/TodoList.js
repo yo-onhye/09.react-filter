@@ -3,8 +3,8 @@ import React from 'react';
 const TodoList = ({
   items,
   isLoading,
-  onAllCheck,
   isTitleCheck,
+  onAllCheck,
   onSingleCheck,
 }) => {
 
@@ -15,9 +15,9 @@ const TodoList = ({
         }
 
         {!isLoading &&
-          items &&
+          items.length > 0 &&
           <table>
-            <caption></caption>
+            <caption><span className='blind'>To do 데이터 테이블</span></caption>
             <colgroup>
               <col width='10%' />
               <col width='15%' />
@@ -33,10 +33,10 @@ const TodoList = ({
                 <th scope='col'>
                   <span className='todoChk'>
                     <input 
-                      type='checkbox' 
-                      id='lb_tit' 
+                      type='checkbox'
+                      id='lb_tit'
                       defaultChecked={isTitleCheck}
-                      value='Completed' 
+                      value='Completed'
                       onChange={onAllCheck}
                     ></input>
                     <label htmlFor='lb_tit'>
@@ -74,6 +74,11 @@ const TodoList = ({
             }
             </tbody>
           </table>
+        }
+
+        {
+          items.length === 0 &&
+          <h3 style={{ textAlign: 'center' }}>데이터가 없습니다.</h3>
         }
       </section>
   )
